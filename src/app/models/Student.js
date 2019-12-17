@@ -2,9 +2,9 @@ import Sequelize, { Model } from 'sequelize';
 
 class Student extends Model {
     static init(sequelize) {
-        console.log('Student init ');
         super.init(
             {
+                studentid: Sequelize.VIRTUAL,
                 name: Sequelize.STRING,
                 email: Sequelize.STRING,
                 idade: Sequelize.INTEGER,
@@ -15,7 +15,10 @@ class Student extends Model {
                 sequelize,
             }
         );
-        console.log('Student end ');
+
+        // this.addHook('beforeSave', async student => {
+        //     if (student.studentid) student.id = student.studentid;
+        // });
 
         return this;
     }

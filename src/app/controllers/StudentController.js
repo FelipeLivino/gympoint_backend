@@ -34,41 +34,39 @@ class StudentController {
 
     async update(req, res) {
         const schema = Yup.object().shape({
-            name: Yup.string(),
-            email: Yup.string().email(),
-            oldPassword: Yup.string().min(6),
-            password: Yup.string()
-                .min(6)
-                .when('oldPassword', (oldPassword, field) =>
-                    oldPassword ? field.required() : field
-                ),
-            confirmPassword: Yup.string().when('password', (password, field) =>
-                password ? field.required().oneOf([Yup.ref('password')]) : field
-            ),
+            studentid: Yup.number().required(),
+            name: Yup.string().required(),
+            email: Yup.string()
+                .email()
+                .required(),
+            idade: Yup.number().required(),
+            peso: Yup.number().required(),
+            altura: Yup.number().required(),
         });
 
         if (!(await schema.isValid(req.body))) {
             return res.status(400).json({ error: 'Validation fails' });
         }
 
-        const { email, oldPassword } = req.body;
+        //console.log(req.body);
+        var {studentid,email} = req.body
+        const student = await Student.findByPk(studentid);
 
-        const user = await User.findByPk(req.userId);
 
-        if (email !== user.email) {
-            const userExist = await User.findOne({
-                where: { email },
+        console.log('studentid',studentid);
+        console.log('student',student);
+        console.log('email',email);
+
+        if ( email !== student.email) {
+             const studentExist = await Student.findOne({
+                where: { email: req.body.email },
             });
-            if (userExist) {
+            if (studentExist) {
                 return res.status(400).json({ error: 'error already exist' });
             }
         }
-
-        if (oldPassword && !(await user.checkPassword(oldPassword))) {
-            return res.status(401).json({ error: 'Password does not match' });
-        }
-
-        const { id, name } = await user.update(req.body);
+        console.log('req.body',req.body);
+        const { id, name } = await Student.update(req.body);
 
         return res.json({
             id,
