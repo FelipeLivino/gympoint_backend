@@ -1,1 +1,19 @@
+sudo docker image list
+sudo docker ps
+
 sudo docker run --name gympoint -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
+sudo docker run postgres
+sudo docker start gympoint
+sudo docker stats gympoint
+
+
+sudo docker run --name mongogympoint  -p 27017:27017 -d -t mongo
+sudo docker run mongo
+sudo docker run mongogympoint
+sudo docker stats mongogympoint
+
+
+sudo docker run --name redisgympoint  -p 6379:6379 -d -t redis:alpine
+sudo docker run redis
+sudo docker run redisgympoint
+sudo docker stats redisgympoint
