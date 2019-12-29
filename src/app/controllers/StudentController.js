@@ -48,23 +48,22 @@ class StudentController {
             return res.status(400).json({ error: 'Validation fails' });
         }
 
-        var {studentid,email} = req.body
+        const { studentid, email } = req.body;
         const student = await Student.findByPk(studentid);
 
-
-        if ( email !== student.email) {
-             const studentExist = await Student.findOne({
+        if (email !== student.email) {
+            const studentExist = await Student.findOne({
                 where: { email: req.body.email },
             });
             if (studentExist) {
                 return res.status(400).json({ error: 'error already exist' });
             }
         }
-        console.log('req.body',req.body);
+        console.log('req.body', req.body);
         const { name } = await student.update(req.body);
 
         return res.json({
-            id : studentid,
+            id: studentid,
             name,
             email,
         });
