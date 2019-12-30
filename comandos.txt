@@ -1,5 +1,7 @@
 sudo docker image list
 sudo docker ps
+docker image rmi <nome imagem>
+docker container rm <nome container>
 
 sudo docker run --name gympoint -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
 sudo docker run postgres
@@ -17,6 +19,3 @@ sudo docker run --name redisgympoint  -p 6379:6379 -d -t redis:alpine
 sudo docker run redis
 sudo docker start redisgympoint
 sudo docker stats redisgympoint
-
-
-docker run f012d14d412f
