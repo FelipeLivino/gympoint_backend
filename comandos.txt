@@ -16,6 +16,6 @@ sudo docker stats mongogympoint
 
 
 sudo docker run --name redisgympoint  -p 6379:6379 -d -t redis:alpine
-sudo docker run redis
+sudo docker run redis:alpine
 sudo docker start redisgympoint
 sudo docker stats redisgympoint

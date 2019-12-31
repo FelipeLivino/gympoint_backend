@@ -8,24 +8,35 @@ class CancellationMail {
     }
 
     async handle({ data }) {
-        const { appointment } = data;
+        const { enrollment, student, plan } = data;
 
         console.log('Fila executando');
+        console.log('enrollment', enrollment);
 
         await Mail.sendMail({
-            to: `${appointment.provider.name} <${appointment.provider.email}>`,
+            to: `${student.name} <${student.email}>`,
             subject: 'Agendamento cancelado',
             template: 'cancellation',
             context: {
-                provider: appointment.provider.name,
-                user: appointment.user.name,
-                date: format(
-                    parseISO(appointment.date),
+                name: student.name,
+                age: student.idade,
+                heigth: student.altura,
+                Weight: student.peso,
+                selectedPlan: plan.title,
+                price: enrollment.price,
+                enddate: format(
+                    parseISO(enrollment.end_date),
+                    "'dia' dd 'de' MMMM', às' H:mm'h'",
+                    { locale: pt }
+                ),
+                startDate: format(
+                    parseISO(enrollment.start_date),
                     "'dia' dd 'de' MMMM', às' H:mm'h'",
                     { locale: pt }
                 ),
             },
         });
+        console.log('Após mail');
     }
 }
 

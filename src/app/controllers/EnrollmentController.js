@@ -5,6 +5,10 @@ import User from '../models/User';
 import Student from '../models/Student';
 import Enrollment from '../models/Enrollment';
 
+import Notification from '../schemas/Notification';
+import CancellationMail from '../jobs/CancellationMail';
+import Queue from '../../lib/Queue';
+
 class EnrollmentController {
     async store(req, res) {
         const schema = Yup.object().shape({
@@ -40,6 +44,20 @@ class EnrollmentController {
         enrollmentBody.price = plan.price * plan.duration;
 
         const enrollment = await Enrollment.create(enrollmentBody);
+
+        // await Notification.create({
+        //     content: `Novo cliente ativado ${student.name}`,
+        //     user: student.Id,
+        // });
+
+        /**
+         * Include send Email
+         */
+        Queue.add(CancellationMail.key, {
+            enrollment,
+            student,
+            plan,
+        });
 
         return res.json(enrollment);
     }
