@@ -5,7 +5,7 @@ import Checkin from '../models/Checkin';
 
 class CheckinController {
     async store(req, res) {
-        const student = Student.findByPk(req.params.Id);
+        const student = await Student.findByPk(req.params.id);
         if (!student) {
             return res.status(401).json({ error: 'Invalid student' });
         }
@@ -35,7 +35,7 @@ class CheckinController {
     }
 
     async index(req, res) {
-        const student = Student.findByPk(req.params.Id);
+        const student = await Student.findByPk(req.params.id);
         if (!student) {
             return res.status(401).json({ error: 'Invalid student' });
         }

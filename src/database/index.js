@@ -5,11 +5,11 @@ import Users from '../app/models/User';
 import Students from '../app/models/Student';
 import Plans from '../app/models/Plan';
 import Enrollments from '../app/models/Enrollment';
-import Checkin from '../app/models/Checkin';
+import Checkins from '../app/models/Checkin';
 
 import databaseConfig from '../config/database';
 
-const models = [Users, Students, Plans, Enrollments, Checkin];
+const models = [Users, Students, Plans, Enrollments, Checkins];
 
 class Database {
     constructor() {
@@ -25,7 +25,6 @@ class Database {
                 if (model.associate) {
                     model.associate(this.connection.models);
                 }
-                // model.associate && model.associate(models)
             });
     }
 
