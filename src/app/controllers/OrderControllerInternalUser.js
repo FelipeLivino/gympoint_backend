@@ -1,6 +1,10 @@
 import * as Yup from 'yup';
 import Order from '../models/Order';
 import Student from '../models/Student';
+import User from '../models/User';
+
+import AnswerMail from '../jobs/AnswerMail';
+import Queue from '../../lib/Queue';
 
 class OrderControllerInternalUser {
     async update(req, res) {
@@ -11,20 +15,45 @@ class OrderControllerInternalUser {
             return res.status(400).json({ error: 'Validation fails' });
         }
 
+        const user = await User.findByPk(req.userId);
+        if (!user) {
+            return res.status(400).json({
+                error: 'You do not have the required permissions assigned',
+            });
+        }
+
         const { id } = req.params;
         const { answer } = req.body;
         const order = await Order.findByPk(id);
+        if (!order || order.answer) {
+            return res.status(400).json({ error: 'Invalid order' });
+        }
+
+        const student = await Student.findByPk(order.student_id);
+
         const orderBodyToInsert = {
             answer,
-            answer_at = new Date();
+            answer_at: new Date(),
         };
 
-        order = await order.update(orderBodyToInsert);
-        // gympoint.com/help-orders/1/answer
+        await order.update(orderBodyToInsert);
+
+        Queue.add(AnswerMail.key, {
+            order,
+            student,
+        });
+
         return res.json(order);
     }
 
     async index(req, res) {
+        const user = await User.findByPk(req.userId);
+        if (!user) {
+            return res.status(400).json({
+                error: 'You do not have the required permissions assigned',
+            });
+        }
+
         const orderList = await Order.findAll({
             where: {
                 answer: null,
